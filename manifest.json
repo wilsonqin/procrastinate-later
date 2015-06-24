@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDesc__",
+  "version": "0.1.0",
+  "icons" : {
+    "16": "icon-16.png"
+  },
+  "default_locale": "en",
+
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "feed.html",
+    "default_title": "Click Here!"
+  },
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/",
+    "contextMenus",
+    "storage",
+    "notifications"
+  ]
+}

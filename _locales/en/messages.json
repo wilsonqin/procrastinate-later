@@ -1,0 +1,11 @@
+{
+  "extName": {
+   "message": "Procrastinate Later",
+   "description": "Extension name"},
+ "extDesc": {
+   "message": "This extension lets you focus now. Alleviate your fear of missing out, gather your internet surfing links for procrastinating later.",
+   "description": "Extension description"},
+ "openContextMenuTitle": {
+   "message": "Procrastinate Later",
+   "description": "context menu button text"}
+}
