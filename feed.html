@@ -3,7 +3,11 @@
  This page is shown when the extension button is clicked, because the
  "browser_action" field in manifest.json contains the "default_popup" key with
  value "feed.html".
+
+ Here is where the articles tracked for later are loaded back from local storage
+ and displayed back to the user in a readable format.
  -->
+
 <html>
   <head>
     <title>Your Procrastination Feed</title>
@@ -12,12 +16,12 @@
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
         font-size: 100%;
       }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
+      #feed {
+        width:400px;
+      }
+
+      .article{
+        padding:5px;
       }
     </style>
 
@@ -27,11 +31,12 @@
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
      -->
-    <script src=""></script>
+    <script type="text/javascript" src="lib/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="feed.js"></script>
   </head>
   <body>
-    <div id="status"></div>
-    <img id="image-result" hidden>
+    <div id="feed">
+    </div>
   </body>
 </html>
 

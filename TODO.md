@@ -23,3 +23,12 @@ Background.js
         [ ] Popup content should include top 3 links (which based on options can be random or queue based)
 
 [ ] Keeps procrastination 
+
+
+
+[ ] Make notifcations of added articles disappear after a while
+
+[ ] Have ability to delete aritcles from the read later cache.
+
+BUGS
+[ ] On MAC OS X YOSEMITE, dual monitors, notifications show up on laptop monitor only
