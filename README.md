@@ -1,7 +1,5 @@
-Later Link TBD
+Procrastinate Later
 
-A chrome extension to organize links to pages/articles/videos that you want to check out later, so as not to distract you now.
+A Chrome extension to organize links to pages/articles/videos that you want to check out later, so as not to distract you now.
 
-Things you definitely want to read later.
-You might want to.
-And your own curated lists.
+It works by adding both contextual actions to track links for later while browsing, and also providing a 'feed' view of all tracked links for later delayed procrastination sessions.
