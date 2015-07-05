@@ -20,10 +20,11 @@
   },
   "permissions": [
     "activeTab",
-    "https://ajax.googleapis.com/",
     "contextMenus",
     "storage",
     "notifications"
+    // "http://*/",
+    // "https://*/"
   ],
   "author": "Wilson Qin"
 }

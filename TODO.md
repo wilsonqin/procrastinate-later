@@ -4,7 +4,7 @@ Ways to save a link:
         -Proceed to choose what list to add to
         -
   [ ] Save by dragging the link on the page to the extension button
-  [ ] Save by right clicking the link on the page
+  [ x ] Save by right clicking the link on the page
 
 i8ln
 
@@ -26,9 +26,12 @@ Background.js
 
 
 
-[ ] Make notifcations of added articles disappear after a while
+[ x ] Make notifcations of added articles disappear after a while
 
-[ ] Have ability to delete aritcles from the read later cache.
+[ x ] Have ability to delete aritcles from the read later cache.
 
 BUGS
 [ ] On MAC OS X YOSEMITE, dual monitors, notifications show up on laptop monitor only
+[ ] Facebook.com news feed, for divs which have overarching "a" tags, there may be no selection text. Need to access DOM around the clicked element and parse out titles. or XHR to get HTML titles of outbound links.
+[ ] Picture links don't have text to co-opt?g
+
