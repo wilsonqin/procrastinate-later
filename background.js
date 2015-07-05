@@ -1,4 +1,15 @@
+/*
+ * Background chrome extension script for the plugin.
+ *
+ *
+ * By Wilson Qin
+ */
 
+
+// configuration settings
+
+// milliseconds to wait before notifications auto-disappear/cancel
+var __NOTIFICATION_TIMEOUT = 3000;
 
 
 var mapping = {
@@ -9,13 +20,16 @@ var mapping = {
   // }
 };
 
+// Namespacing, post-fixes for formulating storage keys (for local storage)
 var _PL_KeyPrefixes = {
   v0 : {
     link : "l",
-    title : "t"
+    title : "t",
+    date : "d"
   }
 };
 
+// Storage Keys (for local storage) organized here
 var _PL_Keys = {
   v0 : {
     aIDs : "aIDs",
@@ -33,7 +47,7 @@ function printAllStorage(){
   });
 }
 
-function setup(){
+function setupStorageInit(){
   var storageInit = $.Deferred();
 
   chrome.storage.local.get(_PL_Keys.v0.isNotFirstTime, function(obj){
@@ -66,6 +80,13 @@ function setup(){
     });
   });
 
+  return storageInit;
+}
+
+function setup(){
+
+  setupStorageInit();
+
   //setup the right-click menu
   chrome.runtime.onInstalled.addListener(function(){
 
@@ -81,24 +102,21 @@ function setup(){
         parentId: 'open',
         contexts: ['link']
     });
-    chrome.contextMenus.create({ 
-        id: 'Mark for Maybe',
-        title: 'Add to Maybe',
-        parentId: 'open',
-        contexts: ['link']
-    });
-    chrome.contextMenus.create({ 
-        id: 'add-custom',
-        title: 'Mark for List',
-        parentId: 'open',
-        contexts: ['link']
-    });
+    // chrome.contextMenus.create({ 
+    //     id: 'Mark for Maybe',
+    //     title: 'Add to Maybe',
+    //     parentId: 'open',
+    //     contexts: ['link']
+    // });
+    // chrome.contextMenus.create({ 
+    //     id: 'add-custom',
+    //     title: 'Mark for List',
+    //     parentId: 'open',
+    //     contexts: ['link']
+    // });
 
     chrome.contextMenus.onClicked.addListener(function(info, tab) {
       var title, link;
-
-      console.log(info);
-      console.log(tab);
 
       // extract the info we can get from the right click
       link = info.linkUrl;
@@ -111,47 +129,57 @@ function setup(){
         
       // }
 
+      saveArticle(title, link);
 
-      var saveObj = {};
-      var id = generateNextID();
-
-      saveObj[id + '-' + _PL_KeyPrefixes.v0.title] = title;
-      saveObj[id + '-' + _PL_KeyPrefixes.v0.link] = link;
-
-      addArticleID(id);
-
-     // Save it using the Chrome extension storage API.
-      chrome.storage.local.set(saveObj, function() {
-
-        //save the ArticleIDs array
-        saveArticleIDs(function(){
-
-          if(chrome.runtime.lastError){
-            //error handling here
-            console.log("error happened: ", chrome.runtime.lastError);
-          }
-
-          // Notify that we saved.
-          new Notification("New Item Added", {
-            body: title, 
-             icon: ''
-          });
-        });
-
-      });
-
-      // chrome.downloads.download({url: info.linkUrl}, function(downloadId) {
-        // var ids = getOpeningIds();
-        // if (ids.indexOf(downloadId) >= 0) {
-        //   return;
-        // }
-        // ids.push(downloadId);
-        // setOpeningIds(ids);
-      // });
     });
 
   });
 }
+
+/*
+ *  Add an article to storage
+ *
+ */
+function saveArticle(title, link){
+  var saveObj = {};
+  var id = generateNextID();
+
+  saveObj[id + '-' + _PL_KeyPrefixes.v0.title] = title;
+  saveObj[id + '-' + _PL_KeyPrefixes.v0.link] = link;
+  saveObj[id + '-' + _PL_KeyPrefixes.v0.date] = (new Date()).toString();
+
+  addArticleID(id);
+
+ // Save it using the Chrome extension storage API.
+  chrome.storage.local.set(saveObj, function() {
+
+    if(chrome.runtime.lastError){
+      //error handling needs to happen here for saving the article attributes to storage
+      console.log("error happened: ", chrome.runtime.lastError);
+    }
+
+    //save the ArticleIDs array to storage
+    saveArticleIDs(function(){
+
+      if(chrome.runtime.lastError){
+        //error handling here
+        console.log("error happened: ", chrome.runtime.lastError);
+      }
+
+      // Notify that we saved.
+      var notif = new Notification("New Item Added", {
+        body: title, 
+         icon: ''
+      });
+
+      setTimeout(function(){
+        notif.close();
+      }, __NOTIFICATION_TIMEOUT);
+    });
+
+  });
+}
+
 /*
  *  Generate a sequential string id
  *  Returns a string id which should be an previously unused key in local storage
@@ -171,6 +199,27 @@ function generateNextID(){
   return id.toString();
 }
 
+/*
+ * Remove an article from Local Storage
+ */
+function removeArticle(id){
+  var keys = [];
+
+  // build array of attribute keys for article with ID `id`
+  for(var k in _PL_KeyPrefixes.v0){
+    keys.push(id.toString() + _PL_KeyPrefixes.v0[k]);
+  }
+
+  chrome.storage.local.remove(keys, function(){
+    if(chrome.runtime.lastError){
+      console.log("error removing article: ", chrome.runtime.lastError);
+    }
+  });
+}
+
+/*
+ *  Propogate current ArticleID array in-memory, to storage
+ */
 function saveArticleIDs(callback){
   var params = {};
   params[_PL_Keys.v0.aIDs] = _PL_ArticleIDs.toString();
@@ -178,8 +227,23 @@ function saveArticleIDs(callback){
   chrome.storage.local.set(params, callback);
 }
 
+/*
+ *  Add an article id to the in-memory articleID array.
+ *  Note: Need to invoke save of the array to propogate to storage
+ */
 function addArticleID(id){
-  _PL_ArticleIDs.push(id);
+  _PL_ArticleIDs.push(id.toString());
+}
+
+/*
+ *  Remove an article id from the in-memory articleID array.
+ *  Note: Need to invoke save of the array to propogate to storage
+ */
+function removeArticleID(id){
+  var index = _PL_ArticleIDs.indexOf(id.toString());
+  if (index > -1) {
+    _PL_ArticleIDs.splice(index, 1);
+  }
 }
 
 //init

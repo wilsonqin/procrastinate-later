@@ -21,7 +21,30 @@
       }
 
       .article{
-        padding:5px;
+        margin:10px 5px 10px 5px;
+        width:100%;
+        overflow:auto;
+      }
+
+      .article-textliner{
+        display:inline;
+        padding:2px 0px 2px 0px;
+        width:85%;
+        float:left;
+      }
+
+      .article-subtext{
+        clear:both;
+        display:block;
+        color:gray;
+        font-size:10px;
+      }
+
+      .article-buttons{
+        display:inline;
+        padding:2px 0px 2px 0px;
+        width:15%;
+        float:left;
       }
     </style>
 
@@ -32,10 +55,19 @@
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
      -->
     <script type="text/javascript" src="lib/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="lib/moment-2.10.3.min.js"></script>
     <script type="text/javascript" src="feed.js"></script>
   </head>
   <body>
+    <div id="settings-bar"></div>
     <div id="feed">
+      <div id="feed-empty-message">
+        <p>Looks like you don't have any links marked for Procrastinating Later!</p>
+        <p>To add a link, right click on a link as you are browsing and choose the Procrastinate Later option.</p>
+      </div>
+      <div id="feed-waiting-animation" hidden="true">
+        <img src="resources/Animhorse.gif"></img>
+      </div>
     </div>
   </body>
 </html>
