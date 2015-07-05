@@ -46,6 +46,28 @@
         width:15%;
         float:left;
       }
+
+      #settings-bar{
+        display:block;
+        width:100%;
+        overflow:auto;
+        padding:0px 5px 0px 5px;
+
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f2f9fe+0,d6f0fd+100;White+3D+%232 */
+        background: #f2f9fe; /* Old browsers */
+        background: -moz-linear-gradient(top,  #f2f9fe 0%, #d6f0fd 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f9fe), color-stop(100%,#d6f0fd)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #f2f9fe 0%,#d6f0fd 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #f2f9fe 0%,#d6f0fd 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #f2f9fe 0%,#d6f0fd 100%); /* IE10+ */
+        background: linear-gradient(to bottom,  #f2f9fe 0%,#d6f0fd 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f9fe', endColorstr='#d6f0fd',GradientType=0 ); /* IE6-9 */
+
+      }
+
+      #settings-bar button{
+        float:right;
+      }
     </style>
 
     <!--
@@ -59,7 +81,10 @@
     <script type="text/javascript" src="feed.js"></script>
   </head>
   <body>
-    <div id="settings-bar"></div>
+    <div id="settings-bar">
+      <p>Procrastinate Later</p>
+      <button data-state=false>Clear All</button>
+    </div>
     <div id="feed">
       <div id="feed-empty-message">
         <p>Looks like you don't have any links marked for Procrastinating Later!</p>

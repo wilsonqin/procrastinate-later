@@ -8,12 +8,19 @@
  */
 
 
+/*
+ * Shorten a title
+ *
+ */
+//TODO
+
  /* 
  *  produce the domain of a site
  *  takes urlString expected of format: [http protocol]://[domain maybe w subdomain]/slug
  */
 function getDomainFromURL(urlString){
   var parts = urlString.split("://");
+
   var domainParts, domain;
   if(parts.length == 2){
     domainParts = parts[1].split("/");
@@ -53,8 +60,8 @@ function genArticleString(i, title, link, date){
  * For now will load all
  */
 function loadFeed(){
-  var articleIDs = chrome.extension.getBackgroundPage()._PL_ArticleIDs;
-  var keyPrefixes = chrome.extension.getBackgroundPage()._PL_KeyPrefixes.v0;
+  var articleIDs = chrome.extension.getBackgroundPage().getArticleIDs();
+  var keyPrefixes = chrome.extension.getBackgroundPage().getKeyPrefixes();
 
   var loading = $.Deferred();
 
@@ -115,6 +122,14 @@ function deleteArticleHandler(e){
   });
 }
 
+/*
+ * Clears all articles from local storage and otherwise
+ * 
+ */
+function clearAllHandler(){
+  $("#feed .article").hide();
+  chrome.extension.getBackgroundPage().reset();
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -124,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // attach live event handlers after loading is complete
     $.when(loading).done(function(){
       $(".article-buttons > button").on('click', deleteArticleHandler);
+      $("#settings-bar > button").on('click', clearAllHandler);
     });
   });
 });

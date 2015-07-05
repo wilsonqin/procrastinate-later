@@ -41,6 +41,10 @@ var _PL_Keys = {
 var _PL_ArticleIDs = [];
 var _PL_NextID;
 
+function clearAllStorage(){
+  chrome.storage.local.clear();
+}
+
 function printAllStorage(){
   chrome.storage.local.get(null, function(obj){
     console.log(obj);
@@ -96,12 +100,13 @@ function setup(){
       contexts: ['link']
     });
 
-    chrome.contextMenus.create({ 
-        id: 'add-later',
-        title: 'Mark for Later',
-        parentId: 'open',
-        contexts: ['link']
-    });
+    // chrome.contextMenus.create({ 
+    //     id: 'add-later',
+    //     title: 'Mark for Later',
+    //     parentId: 'open',
+    //     contexts: ['link']
+    // });
+  
     // chrome.contextMenus.create({ 
     //     id: 'Mark for Maybe',
     //     title: 'Add to Maybe',
@@ -118,16 +123,19 @@ function setup(){
     chrome.contextMenus.onClicked.addListener(function(info, tab) {
       var title, link;
 
+      console.log(info);
+
       // extract the info we can get from the right click
       link = info.linkUrl;
       title = info.selectionText;
 
       // TODO: validate the link is valid URL
+      // here
 
-      // TODO: catch non-initialization cases
-      // if(!link){
-        
-      // }
+      // Catch if title is undefined (this can happen in facebook sometimes)
+      if(title === undefined){
+        title = link;
+      }
 
       saveArticle(title, link);
 
@@ -244,6 +252,36 @@ function removeArticleID(id){
   if (index > -1) {
     _PL_ArticleIDs.splice(index, 1);
   }
+}
+
+/*
+ * Get ArticleIDs array
+ */
+function getArticleIDs(){
+  return _PL_ArticleIDs;
+}
+
+/*
+ * Get Key Prefixes Array
+ */
+function getKeyPrefixes(){
+  return _PL_KeyPrefixes.v0;
+}
+
+/*
+ * Reset
+ */
+function reset(callback){
+  _PL_ArticleIDs = [];
+  _PL_NextID = 1;
+
+  var resetting = $.Deferred();
+
+  clearAllStorage(function(){
+    resetting = setupStorageInit();
+  });
+
+  $.when(resetting).done(callback);
 }
 
 //init
