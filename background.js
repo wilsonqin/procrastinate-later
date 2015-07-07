@@ -11,6 +11,9 @@
 // milliseconds to wait before notifications auto-disappear/cancel
 var __NOTIFICATION_TIMEOUT = 3000;
 
+// Sloth picture. can be used in notification icons and other areas
+var __ICON_LG = 'resources/icon-100.png';
+
 
 var mapping = {
   // actions: {
@@ -178,7 +181,7 @@ function saveArticle(title, link){
       // Notify that we saved.
       var notif = new Notification("New Item Added", {
         body: title, 
-         icon: ''
+         icon: __ICON_LG
       });
 
       setTimeout(function(){
