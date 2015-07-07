@@ -89,59 +89,60 @@ function setupStorageInit(){
 
 function setup(){
 
-  setupStorageInit();
-
   //setup the right-click menu
-  chrome.runtime.onInstalled.addListener(function(){
+  chrome.contextMenus.create({
+    id: 'open',
+    title: chrome.i18n.getMessage('openContextMenuTitle'),
+    contexts: ['link']
+  }, function(){
+    if(chrome.runtime.lastError){
+      console.log("error with creating contextMenu: ", chrome.runtime.lastError);
+    }
+  });
 
-    chrome.contextMenus.create({
-      id: 'open',
-      title: chrome.i18n.getMessage('openContextMenuTitle'),
-      contexts: ['link']
-    });
+  // chrome.contextMenus.create({ 
+  //     id: 'add-later',
+  //     title: 'Mark for Later',
+  //     parentId: 'open',
+  //     contexts: ['link']
+  // });
 
-    // chrome.contextMenus.create({ 
-    //     id: 'add-later',
-    //     title: 'Mark for Later',
-    //     parentId: 'open',
-    //     contexts: ['link']
-    // });
-  
-    // chrome.contextMenus.create({ 
-    //     id: 'Mark for Maybe',
-    //     title: 'Add to Maybe',
-    //     parentId: 'open',
-    //     contexts: ['link']
-    // });
-    // chrome.contextMenus.create({ 
-    //     id: 'add-custom',
-    //     title: 'Mark for List',
-    //     parentId: 'open',
-    //     contexts: ['link']
-    // });
+  // chrome.contextMenus.create({ 
+  //     id: 'Mark for Maybe',
+  //     title: 'Add to Maybe',
+  //     parentId: 'open',
+  //     contexts: ['link']
+  // });
+  // chrome.contextMenus.create({ 
+  //     id: 'add-custom',
+  //     title: 'Mark for List',
+  //     parentId: 'open',
+  //     contexts: ['link']
+  // });
 
-    chrome.contextMenus.onClicked.addListener(function(info, tab) {
-      var title, link;
+  //handler for the right-click menu
+  chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    var title, link;
 
-      console.log(info);
+    console.log(info);
 
-      // extract the info we can get from the right click
-      link = info.linkUrl;
-      title = info.selectionText;
+    // extract the info we can get from the right click
+    link = info.linkUrl;
+    title = info.selectionText;
 
-      // TODO: validate the link is valid URL
-      // here
+    // TODO: validate the link is valid URL
+    // here
 
-      // Catch if title is undefined (this can happen in facebook sometimes)
-      if(title === undefined){
-        title = link;
-      }
+    // Catch if title is undefined (this can happen in facebook sometimes)
+    if(title === undefined){
+      title = link;
+    }
 
-      saveArticle(title, link);
-
-    });
+    saveArticle(title, link);
 
   });
+
+  setupStorageInit();
 }
 
 /*
