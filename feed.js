@@ -106,11 +106,23 @@ function deleteArticleHandler(e){
   var article, id;
 
   var showStatus = $(this).css("background-color", "green");
+  var isLastArticle = ( $(".article").length == 1 );
 
   $.when(showStatus).done(function(){
     article = $(this).parents(".article");
     id = article.data("article-id");
-    article.slideUp("fast");
+    
+    var animating = article.slideUp("fast");
+
+    $.when(animating).done(function(){
+      // removed permanently from DOM after clearance animation
+      article.remove();
+
+      if(isLastArticle){
+        //if there are no more articles left, display empty feed message
+        $("#feed-empty-message").show();
+      }
+    });
 
     var bg = chrome.extension.getBackgroundPage();
 
@@ -127,8 +139,15 @@ function deleteArticleHandler(e){
  * 
  */
 function clearAllHandler(){
-  $("#feed .article").hide();
+  var $articles = $("#feed .article");
+  var rendering = $articles.slideUp("slow");
   chrome.extension.getBackgroundPage().reset();
+
+  $.when(rendering).done(function(){
+    // redisplay empty message
+    $("#feed-empty-message").show();
+    $articles.remove();
+  });
 }
 
 
